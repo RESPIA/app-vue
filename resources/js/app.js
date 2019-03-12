@@ -65,6 +65,8 @@ window.toast = toast
 //     title: "Category add successfully"
 // });
 
+/*moment js*/
+import {filter} from './filter'
 
 /* vuex */
 import Vuex from 'vuex'
