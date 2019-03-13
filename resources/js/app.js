@@ -66,6 +66,8 @@ window.toast = toast
 // });
 
 /*moment js*/
+
+// import filter 
 import {filter} from './filter'
 
 /* vuex */

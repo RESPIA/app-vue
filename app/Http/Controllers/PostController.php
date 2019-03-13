@@ -15,10 +15,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::with('category','user')->get();
+        $posts = Post::with('category','user')->get();
         // return $posts;
-        $category = Category::with('posts')->get();
-        return $category;
+        //$posts = Post::all();
+        return response()->json([
+            'message' => 'list all post',
+            'posts' => $posts
+        ],200);
     }
 
     /**
@@ -84,6 +87,12 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $posts = Post::find($id);
+        $posts->delete();
+        return response()->json([
+            'message' => 'delete post successfully !',
+            'posts' => $posts
+        ]);
+
     }
 }

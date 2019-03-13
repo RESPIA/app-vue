@@ -1,46 +1,99 @@
 <template>
-    <div>
-        <section class="content">
-            <!-- Default box -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Post List</h3>
-                    <div class="card-tools">
-                        <button
-                            type="button"
-                            class="btn btn-tool"
-                            data-widget="collapse"
-                            data-toggle="tooltip"
-                            title="Collapse"
-                        >
-                            <i class="fa fa-minus"></i>
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-tool"
-                            data-widget="remove"
-                            data-toggle="tooltip"
-                            title="Remove"
-                        >
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">Post List Start creating your amazing application...!!!</div>
-                <!-- /.card-body -->
-                <div class="card-footer">Footer</div>
-                <!-- /.card-footer-->
+  <section class="content">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Post List</h3>
+            <div class="card-tools">
+              <button class="btn btn-sm btn-primary">
+                <router-link to="/posts-add">Add Post</router-link>
+              </button>
             </div>
-            <!-- /.card -->
-        </section>
+          </div>
+
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="example2" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Category</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Content</th>
+                  <th>Image</th>
+                  <th>Author</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(post,index) in getallPost" :key="post.id">
+                  <td>{{ index+1 }}</td>
+                  <td>{{ post.category.name }}</td>
+                  <td>{{ post.title | sortlength(20,"....") }}</td>
+                  <td>
+                      <div v-if="post.description.length>=8">Welcome,  {{ post.description | sortlength(40,"....") }}</div>
+                  </td>
+                  <td>
+                      <div v-if="post.description.length>=8">Welcome, {{ post.content | sortlength(100,"....")}}</div>
+                  </td>
+                  <td>
+                      <img :src="post.photo" height="100">
+                  </td>
+                  <td><a href="">{{ post.user.name }}</a></td>
+                  <td>{{ post.created_at | timeformat }}</td>
+                  <td>
+                    <router-link :to="`/posts-edit/${post.id}`" class="btn btn-sm btn-info">Edit</router-link>
+                    <a
+                      class="btn btn-sm btn-danger"
+                      href=""
+                      @click.prevent="deletePost(post.id)"
+                    >Delete</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
+    <!-- /.row -->
+  </section>
 </template>
 <script>
 export default {
-     name : "PostList"
-}
+  name: "CateList",
+  mounted() {
+    // dispatch action from index store
+    //this.$store.dispatch('allCategory');
+    this.$store.dispatch("allPost");
+  },
+  computed: {
+    //this.$store.getters.getCategory
+    getallPost() {
+      // get data from index file in folder store vie (getters life cire) of getCategory func
+      return this.$store.getters.getPost;
+    }
+  },
+  methods: {
+    deletePost(id) {
+      axios
+        .delete("/posts/" + id)
+        .then(() => {
+          //console.log(id);
+          this.$store.dispatch("allPost");
+          toast.fire({
+            type: "success",
+            title: "delete post successfully"
+          });
+        })
+        .catch(() => {});
+    }
+  }
+};
 </script>
-
-<style>
-    
-</style>

@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->integer('comment_id')->unsigned()->nullable(); 
             $table->string('title')->nullable();
             $table->string('description')->nullable();
+            $table->string('content')->nullable();
             $table->string('photo')->nullable();
             $table->timestamps();
         });
