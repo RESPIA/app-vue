@@ -19,7 +19,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category','user')->get();
+        $posts = Post::with('category','user')->orderBy('id', 'desc')->get();
         // return $posts;
         //$posts = Post::all();
         return response()->json([
@@ -91,7 +91,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $posts = Post::find($id);
+        return response()->json([
+            'posts'=>$posts
+        ],200);
     }
 
     /**
