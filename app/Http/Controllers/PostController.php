@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
@@ -48,20 +52,24 @@ class PostController extends Controller
             'content'=>'required|min:10|max:5000',
             'cate_id' => 'required'
         ]);
-        // $strpos = strpos($request->photo,';');
-        // $sub = substr($request->photo,0,$strpos);
-        // $ex = explode('/',$sub)[1];
-        // $name = time().".".$ex;
-        // $img = Image::make($request->photo)->resize(200, 200);
-        // $upload_path = public_path()."/uploadimage/";
-        // $img->save($upload_path.$name);
-        // $post = new Post();
-        // $post->title = $request->title;
-        // $post->description = $request->description;
-        // $post->cat_id = $request->cat_id;
-        // $post->user_id = Auth::user()->id;
-        // $post->photo = $name;
-        // $post->save();
+
+        $strpos = strpos($request->photo,';');
+        $sub = substr($request->photo,0,$strpos);
+        $ex = explode('/',$sub)[1];
+        $name = time().".".$ex;
+        $img = Image::make($request->photo)->resize(200, 200);
+        $upload_path = public_path()."/assets/admin/posts/";
+        $img->save($upload_path.$name);
+
+        $post = new Post();
+        $post->title = $request->title;
+        $post->description = $request->description;
+        $post->content = $request->content;
+        $post->cate_id = $request->cate_id;
+        $post->user_id = Auth::user()->id;
+        $post->photo = $name;
+        $post->save();
+
     }
 
     /**
@@ -106,12 +114,21 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+
         $posts = Post::find($id);
+
+        $image_path = public_path()."/assets/admin/posts/";
+        $image = $image_path. $posts->photo;
+        if(file_exists($image)){
+            @unlink($image);
+        }
+
         $posts->delete();
         return response()->json([
             'message' => 'delete post successfully !',
             'posts' => $posts
         ]);
+        
 
     }
 }

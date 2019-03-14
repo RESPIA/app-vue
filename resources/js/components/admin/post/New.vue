@@ -1,5 +1,5 @@
 <template>
-    <section class="content">
+    <section class="content mt-2">
         <div class="container-fluid">
             <div class="row justify-content-around">
                 <!-- left column -->
@@ -132,16 +132,18 @@ export default {
        }else{
            let reader = new FileReader();
            reader.onload = event => {
-               this.form.photo = event.target.result
-               //console.log(event.target.result)
+               this.form.photo = event.target.result;
+               console.log(event.target.result);
            };
            reader.readAsDataURL(file);
        }
     },
     addPost() {
+      //console.log(this.form.content);
       this.form
         .post("/posts")
-        .then(() => {
+        .then(response => {
+          console.log(response.data);
           this.$router.push("/posts-list");
 
           toast.fire({
@@ -149,7 +151,9 @@ export default {
             title: "Post add successfully"
           });
         })
-        .catch(() => {});
+        .catch(e => {
+          console.log(e.response.data);
+        });
     }
   }
 };

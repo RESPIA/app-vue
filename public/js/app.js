@@ -4606,6 +4606,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CateList",
   mounted: function mounted() {
@@ -4621,6 +4627,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    pathImage: function pathImage(img) {
+      return "assets/admin/posts/" + img;
+    },
     deletePost: function deletePost(id) {
       var _this = this;
 
@@ -4785,7 +4794,8 @@ __webpack_require__.r(__webpack_exports__);
         var reader = new FileReader();
 
         reader.onload = function (event) {
-          _this.form.photo = event.target.result; //console.log(event.target.result)
+          _this.form.photo = event.target.result;
+          console.log(event.target.result);
         };
 
         reader.readAsDataURL(file);
@@ -4794,14 +4804,19 @@ __webpack_require__.r(__webpack_exports__);
     addPost: function addPost() {
       var _this2 = this;
 
-      this.form.post("/posts").then(function () {
+      //console.log(this.form.content);
+      this.form.post("/posts").then(function (response) {
+        console.log(response.data);
+
         _this2.$router.push("/posts-list");
 
         toast.fire({
           type: "success",
           title: "Post add successfully"
         });
-      }).catch(function () {});
+      }).catch(function (e) {
+        console.log(e.response.data);
+      });
     }
   }
 });
@@ -82869,7 +82884,7 @@ var render = function() {
                         post.description.length >= 8
                           ? _c("div", [
                               _vm._v(
-                                "Welcome,  " +
+                                "Welcome, " +
                                   _vm._s(
                                     _vm._f("sortlength")(
                                       post.description,
@@ -82900,7 +82915,12 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("td", [
-                        _c("img", { attrs: { src: post.photo, height: "66" } })
+                        _c("img", {
+                          attrs: {
+                            src: _vm.pathImage(post.photo),
+                            height: "66"
+                          }
+                        })
                       ]),
                       _vm._v(" "),
                       _c("td", [
@@ -83003,7 +83023,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("section", { staticClass: "content" }, [
+  return _c("section", { staticClass: "content mt-2" }, [
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "row justify-content-around" }, [
         _c("div", { staticClass: "col-md-10" }, [

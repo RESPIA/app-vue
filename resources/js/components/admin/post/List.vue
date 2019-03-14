@@ -34,21 +34,27 @@
                   <td>{{ post.category.name }}</td>
                   <td>{{ post.title | sortlength(20,"....") }}</td>
                   <td>
-                      <div v-if="post.description.length>=8">Welcome,  {{ post.description | sortlength(40,"....") }}</div>
+                    <div
+                      v-if="post.description.length>=8"
+                    >Welcome, {{ post.description | sortlength(40,"....") }}</div>
                   </td>
                   <td>
-                      <div v-if="post.description.length>=8">Welcome, {{ post.content | sortlength(100,"....")}}</div>
+                    <div
+                      v-if="post.description.length>=8"
+                    >Welcome, {{ post.content | sortlength(100,"....")}}</div>
                   </td>
                   <td>
-                      <img :src="post.photo" height="66">
+                    <img :src="pathImage(post.photo)" height="66">
                   </td>
-                  <td><a href="">{{ post.user.name }}</a></td>
+                  <td>
+                    <a href>{{ post.user.name }}</a>
+                  </td>
                   <td>{{ post.created_at | timeformat }}</td>
                   <td>
                     <router-link :to="`/posts-edit/${post.id}`" class="btn btn-sm btn-info">Edit</router-link>
                     <a
                       class="btn btn-sm btn-danger"
-                      href=""
+                      href
                       @click.prevent="deletePost(post.id)"
                     >Delete</a>
                   </td>
@@ -81,6 +87,9 @@ export default {
     }
   },
   methods: {
+    pathImage(img) {
+      return "assets/admin/posts/" + img;  
+    },
     deletePost(id) {
       axios
         .delete("/posts/" + id)
