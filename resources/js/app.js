@@ -46,6 +46,15 @@ window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
+// edit support
+import 'v-markdown-editor/dist/index.css';
+import Editor from 'v-markdown-editor'
+// global register
+Vue.use(Editor);
+
+
+
+
 
 /*sweetalert2 */
 import swal from 'sweetalert2'

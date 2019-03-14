@@ -40,7 +40,7 @@
                       <div v-if="post.description.length>=8">Welcome, {{ post.content | sortlength(100,"....")}}</div>
                   </td>
                   <td>
-                      <img :src="post.photo" height="100">
+                      <img :src="post.photo" height="66">
                   </td>
                   <td><a href="">{{ post.user.name }}</a></td>
                   <td>{{ post.created_at | timeformat }}</td>
