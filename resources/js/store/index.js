@@ -21,7 +21,7 @@ export default {
 
                 // node view life circe
 
-                // task 1
+                // task 2
                 context.commit('category', response.data.category);
             })
         }, // -> dispatch('account/login')
@@ -29,7 +29,7 @@ export default {
         // dispatch action from List Cate
         allPost(context) {
             axios.get('/posts').then((response) => {
-                console.log(response.data.posts);
+                //console.log(response.data.posts);
 
                 // node view life circe
 
@@ -40,7 +40,7 @@ export default {
 
     },
     mutations: {
-        // run task 1
+        // run task 2
         category(state, data) {
             return state.category = data;
         }, // -> commit('account/login')

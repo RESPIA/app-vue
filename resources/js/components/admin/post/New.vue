@@ -28,15 +28,15 @@
                 </div>
                 <div class="form-group">
                   <label for="descriptionId">Description</label>
-                  <!-- <textarea
+                  <textarea
                                         class="form-control"
                                         v-model="form.description"
                                         name="description"
                                         id="description"
                                         rows="4"
                                         :class="{ 'is-invalid': form.errors.has('description') }"
-                  ></textarea>-->
-                  <markdown-editor v-model="form.description"></markdown-editor>
+                  ></textarea>
+                  <!-- <markdown-editor v-model="form.description"></markdown-editor> -->
                   <!-- <markdown-editor v-model="form.description"></markdown-editor> -->
                   <has-error :form="form" field="description"></has-error>
                 </div>
@@ -77,6 +77,7 @@
                     :class="{ 'is-invalid': form.errors.has('photo') }"
                   >
                   <img :src="form.photo" alt width="80" height="80">
+                  
                   <has-error :form="form" field="photo"></has-error>
                 </div>
               </div>

@@ -4586,17 +4586,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EditPost",
-  mounted: function mounted() {
-    var _this = this;
-
-    axios.get("/posts/".concat(this.$route.params.postid, "/edit")).then(function (response) {
-      console.log(response);
-
-      _this.form.fill(response.data.posts);
-    }); // get category
-
-    this.$store.dispatch("allCategory");
-  },
   data: function data() {
     return {
       form: new Form({
@@ -4607,6 +4596,19 @@ __webpack_require__.r(__webpack_exports__);
         photo: ""
       })
     };
+  },
+  mounted: function mounted() {
+    // get category
+    this.$store.dispatch("allCategory");
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get("/posts/".concat(this.$route.params.postid, "/edit")).then(function (response) {
+      console.log(response);
+
+      _this.form.fill(response.data.posts);
+    });
   },
   computed: {
     getallCategory: function getallCategory() {
@@ -4638,22 +4640,32 @@ __webpack_require__.r(__webpack_exports__);
         reader.readAsDataURL(file);
       }
     },
-    editPost: function editPost() {
+    updatePost: function updatePost() {
       var _this3 = this;
 
       //console.log(this.form.content);
-      this.form.post("/posts").then(function (response) {
+      this.form.put("/posts/".concat(this.$route.params.postid)).then(function (response) {
         console.log(response.data);
 
         _this3.$router.push("/posts-list");
 
         toast.fire({
           type: "success",
-          title: "Post add successfully"
+          title: "Post updated successfully"
         });
       }).catch(function (e) {
         console.log(e.response.data);
       });
+    },
+    // update image when edit
+    updateImage: function updateImage() {
+      var img = this.form.photo;
+
+      if (img.length > 100) {
+        return this.form.photo;
+      } else {
+        return "./../assets/admin/posts/".concat(this.form.photo);
+      }
     }
   }
 });
@@ -4787,6 +4799,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -82903,7 +82916,7 @@ var render = function() {
                 on: {
                   submit: function($event) {
                     $event.preventDefault()
-                    return _vm.editPost()
+                    return _vm.updatePost()
                   }
                 }
               },
@@ -82960,13 +82973,36 @@ var render = function() {
                         _vm._v("Description")
                       ]),
                       _vm._v(" "),
-                      _c("markdown-editor", {
-                        model: {
-                          value: _vm.form.description,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "description", $$v)
-                          },
-                          expression: "form.description"
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.description,
+                            expression: "form.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: {
+                          "is-invalid": _vm.form.errors.has("description")
+                        },
+                        attrs: {
+                          name: "description",
+                          id: "description",
+                          rows: "4"
+                        },
+                        domProps: { value: _vm.form.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "description",
+                              $event.target.value
+                            )
+                          }
                         }
                       }),
                       _vm._v(" "),
@@ -83095,7 +83131,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("img", {
                         attrs: {
-                          src: _vm.form.photo,
+                          src: _vm.updateImage(),
                           alt: "",
                           width: "80",
                           height: "80"
@@ -83211,7 +83247,7 @@ var render = function() {
                         post.description.length >= 8
                           ? _c("div", [
                               _vm._v(
-                                "Welcome, " +
+                                " " +
                                   _vm._s(
                                     _vm._f("sortlength")(
                                       post.description,
@@ -83228,7 +83264,7 @@ var render = function() {
                         post.description.length >= 8
                           ? _c("div", [
                               _vm._v(
-                                "Welcome, " +
+                                " " +
                                   _vm._s(
                                     _vm._f("sortlength")(
                                       post.content,
@@ -83421,13 +83457,36 @@ var render = function() {
                         _vm._v("Description")
                       ]),
                       _vm._v(" "),
-                      _c("markdown-editor", {
-                        model: {
-                          value: _vm.form.description,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "description", $$v)
-                          },
-                          expression: "form.description"
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.description,
+                            expression: "form.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: {
+                          "is-invalid": _vm.form.errors.has("description")
+                        },
+                        attrs: {
+                          name: "description",
+                          id: "description",
+                          rows: "4"
+                        },
+                        domProps: { value: _vm.form.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "description",
+                              $event.target.value
+                            )
+                          }
                         }
                       }),
                       _vm._v(" "),
@@ -100173,7 +100232,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/category').then(function (response) {
         //console.log(response.data.category);
         // node view life circe
-        // task 1
+        // task 2
         context.commit('category', response.data.category);
       });
     },
@@ -100181,16 +100240,16 @@ __webpack_require__.r(__webpack_exports__);
     // dispatch action from List Cate
     allPost: function allPost(context) {
       axios.get('/posts').then(function (response) {
-        console.log(response.data.posts); // node view life circe
+        //console.log(response.data.posts);
+        // node view life circe
         // task 2
-
         context.commit('posts', response.data.posts);
       });
     } // -> dispatch('account/login')
 
   },
   mutations: {
-    // run task 1
+    // run task 2
     category: function category(state, data) {
       return state.category = data;
     },

@@ -50,7 +50,8 @@ class PostController extends Controller
             'title'=>'required|min:2|max:50',
             'description'=>'required|min:2|max:1000',
             'content'=>'required|min:10|max:5000',
-            'cate_id' => 'required'
+            'cate_id' => 'required',
+            'photo' => 'required|image'
         ]);
 
         $strpos = strpos($request->photo,';');
@@ -106,7 +107,41 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+
+        $this->validate($request,[
+            'title'=>'required|min:2|max:50',
+            'description'=>'required|min:2|max:1000',
+            'content'=>'required|min:10|max:5000',
+            'cate_id' => 'required'
+            //'photo' => 'required|image'
+        ]);
+
+        
+        if($request->photo!=$post->photo){
+            $strpos = strpos($request->photo,';');
+            $sub = substr($request->photo,0,$strpos);
+            $ex = explode('/',$sub)[1];
+            $name = time().".".$ex;
+            $img = Image::make($request->photo)->resize(200, 200);
+            $upload_path = public_path()."/assets/admin/posts/";
+            $image = $upload_path. $post->photo;
+            $img->save($upload_path.$name);
+            if(file_exists($image)){
+                @unlink($image);
+            }
+        }else{
+            $name = $post->photo;
+        }
+
+        $post->title = $request->title;
+        $post->description = $request->description;
+        $post->content = $request->content;
+        $post->cate_id = $request->cate_id;
+        $post->user_id = Auth::user()->id;
+        $post->photo = $name;
+        $post->save();
+
     }
 
     /**

@@ -11,7 +11,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" enctype="multipart/form-data" @submit.prevent="editPost()">
+            <form role="form" enctype="multipart/form-data" @submit.prevent="updatePost()">
               <div class="card-body">
                 <div class="form-group">
                   <label for="postId">Post title</label>
@@ -28,15 +28,15 @@
                 </div>
                 <div class="form-group">
                   <label for="descriptionId">Description</label>
-                  <!-- <textarea
+                  <textarea
                                         class="form-control"
                                         v-model="form.description"
                                         name="description"
                                         id="description"
                                         rows="4"
                                         :class="{ 'is-invalid': form.errors.has('description') }"
-                  ></textarea>-->
-                  <markdown-editor v-model="form.description"></markdown-editor>
+                  ></textarea>
+                  <!-- <markdown-editor v-model="form.description"></markdown-editor> -->
                   <!-- <markdown-editor v-model="form.description"></markdown-editor> -->
                   <has-error :form="form" field="description"></has-error>
                 </div>
@@ -60,7 +60,7 @@
                     :class="{ 'is-invalid': form.errors.has('cate_id') }"
                     v-model="form.cate_id"
                   >
-                    <option disabled value>Select One</option>
+                    <option disabled value="">Select One</option>
                     <option
                       :value="category.id"
                       v-for="(category,index) in getallCategory"
@@ -76,7 +76,7 @@
                     type="file"
                     :class="{ 'is-invalid': form.errors.has('photo') }"
                   >
-                  <img :src="form.photo" alt width="80" height="80">
+                  <img :src="updateImage()" alt="" width="80" height="80">
                   <has-error :form="form" field="photo"></has-error>
                 </div>
               </div>
@@ -98,16 +98,6 @@
 <script>
 export default {
   name: "EditPost",
-
-  mounted() {
-    axios.get(`/posts/${this.$route.params.postid}/edit`).then(response => {
-      console.log(response);
-      this.form.fill(response.data.posts);
-    });
-    // get category
-    this.$store.dispatch("allCategory");
-  },
-
   data() {
     return {
       form: new Form({
@@ -120,6 +110,17 @@ export default {
     };
   },
 
+  mounted() {
+    // get category
+    this.$store.dispatch("allCategory");
+  },
+
+  created() {
+    axios.get(`/posts/${this.$route.params.postid}/edit`).then(response => {
+      console.log(response);
+      this.form.fill(response.data.posts);
+    });
+  },
   computed: {
     getallCategory() {
       return this.$store.getters.getCategory;
@@ -145,24 +146,32 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    editPost() {
+    updatePost() {
       //console.log(this.form.content);
       this.form
-        .post("/posts")
+        .put(`/posts/${this.$route.params.postid}`)
         .then(response => {
           console.log(response.data);
           this.$router.push("/posts-list");
 
           toast.fire({
             type: "success",
-            title: "Post add successfully"
+            title: "Post updated successfully"
           });
         })
         .catch(e => {
           console.log(e.response.data);
         });
+    },
+    // update image when edit
+    updateImage() {
+      let img = this.form.photo;
+      if (img.length > 100) {
+        return this.form.photo;
+      } else {
+        return `./../assets/admin/posts/${this.form.photo}`;
+      }
     }
-    
   }
 };
 </script>

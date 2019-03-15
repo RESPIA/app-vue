@@ -36,12 +36,12 @@
                   <td>
                     <div
                       v-if="post.description.length>=8"
-                    >Welcome, {{ post.description | sortlength(40,"....") }}</div>
+                    > {{ post.description | sortlength(40,"....") }}</div>
                   </td>
                   <td>
                     <div
                       v-if="post.description.length>=8"
-                    >Welcome, {{ post.content | sortlength(100,"....")}}</div>
+                    > {{ post.content | sortlength(100,"....")}}</div>
                   </td>
                   <td>
                     <img :src="pathImage(post.photo)" height="66">
