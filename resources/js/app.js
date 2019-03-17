@@ -21,7 +21,8 @@ import { routes } from './routes';
 
 const router = new VueRouter({
     routes, // short for `routes: routes`
-    mode: 'history'
+    //mode: 'history'
+    mode: "hash"
 })
 
 /**
@@ -37,7 +38,11 @@ const router = new VueRouter({
 
 //Vue.component("example-component",require("./components/ExampleComponent.vue").default);
 
-Vue.component("admin-master", require("./components/admin/AdminMaster.vue").default);
+// Backend  
+Vue.component("adminMaster", require("./components/admin/AdminMaster.vue").default);
+
+// Frontend
+Vue.component('publicMaster', require('./components/public/PublicMaster.vue').default);
 
 
 /*v-form*/
@@ -69,15 +74,15 @@ const toast = swal.mixin({
     timer: 3000
 });
 window.toast = toast
-// toast.fire({
-//     type: "success",
-//     title: "Category add successfully"
-// });
+    // toast.fire({
+    //     type: "success",
+    //     title: "Category add successfully"
+    // });
 
 /*moment js*/
 
 // import filter 
-import {filter} from './filter'
+import { filter } from './filter'
 
 /* vuex */
 import Vuex from 'vuex'
@@ -102,4 +107,4 @@ const app = new Vue({
     router,
     // store vuex
     store
-});
+})
