@@ -17,6 +17,16 @@
             <table id="example2" class="table table-bordered table-hover">
               <thead>
                 <tr>
+                  <th>
+                    <select name id v-model="select" @change="deleteSelected">
+                      <option value>Select</option>
+                      <option value>Delete all</option>
+                    </select>
+                    <br>
+                    <input type="checkbox" @click.prevent="selectAll" v-model="all_select">
+                    <span v-if="all_select==false">Check All</span>
+                    <span v-else>Uncheck All</span>
+                  </th>
                   <th>STT</th>
                   <th>Category</th>
                   <th>Created</th>
@@ -25,14 +35,20 @@
               </thead>
               <tbody>
                 <tr v-for="(category,index) in getallCategory" :key="category.id">
+                  <td>
+                    <input type="checkbox" v-model="categoryItem" :value="category.id">
+                  </td>
                   <td>{{ index+1 }}</td>
                   <td>{{ category.cate_name }}</td>
                   <td>{{ category.created_at | timeformat }}</td>
                   <td>
-                    <router-link :to="`/category-edit/${category.id}`" class="btn btn-sm btn-info">Edit</router-link>
+                    <router-link
+                      :to="`/category-edit/${category.id}`"
+                      class="btn btn-sm btn-info"
+                    >Edit</router-link>
                     <a
                       class="btn btn-sm btn-danger"
-                      href=""
+                      href
                       @click.prevent="deletecategory(category.id)"
                     >Delete</a>
                   </td>
@@ -52,6 +68,14 @@
 <script>
 export default {
   name: "CateList",
+  data() {
+    return {
+      categoryItem: [],
+      select: "",
+      // select all category
+      all_select: false
+    };
+  },
   mounted() {
     // dispatch action from index store
     //this.$store.dispatch('allCategory');
@@ -76,6 +100,31 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    deleteSelected() {
+      //alert(this.categoryItem);
+      console.log(this.categoryItem);
+      //console.log(this.select);
+      //alert(this.select);
+      axios.get("/deletecategory/" + this.categoryItem).then(() => {
+        this.categoryItem = [];
+        this.$store.dispatch("allCategory");
+        toast.fire({
+            type: "success",
+            title: "delete list category successfully"
+          });
+      });
+    },
+    selectAll() {
+      if (this.all_select == false) {
+        this.all_select = true;
+        for (var category in this.getallCategory) {
+          this.categoryItem.push(this.getallCategory[category].id);
+        }
+      }else {
+        this.all_select = false;
+        this.categoryItem = [];
+      }
     }
   }
 };

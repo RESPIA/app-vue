@@ -111,4 +111,15 @@ class CategoryController extends Controller
         ]);
 
     }
+
+    public function selected_category($ids){
+        //var_dump($ids);
+        //return $ids;
+        $all_id = explode(',',$ids);
+        foreach ($all_id as $id){
+            $category = Category::find($id);
+            $category->delete();
+        }
+     }
+
 }

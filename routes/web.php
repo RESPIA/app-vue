@@ -23,6 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('posts', 'PostController');
     Route::resource('category', 'CategoryController');
+    Route::get('/deletecategory/{id}','CategoryController@selected_category');
 });
 
 //Route::get('/{anypath}','HomeController@index')->where('path','.*');
